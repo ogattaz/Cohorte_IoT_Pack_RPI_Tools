@@ -75,11 +75,16 @@ def base256_encode(n, minwidth=0): # int/long to byte array
         b = (minwidth-len(b)) * '\x00' + b
     return b
 
+#wDeviceTTY="/dev/ttyS0"
+#wDeviceTTY="/dev/ttyUSB0"
+#wDeviceTTY="/dev/ttyUSB1"
+wDeviceTTY="/dev/ttyarmn8lw"
+
 print '--- begin'
 wSerial = serial.Serial()
 
 try:
-    wSerial.port="/dev/ttyS0"
+    wSerial.port=wDeviceTTY
     wSerial.baudrate = 19200
     wSerial.bytesize = serial.EIGHTBITS
     wSerial.parity = serial.PARITY_NONE
