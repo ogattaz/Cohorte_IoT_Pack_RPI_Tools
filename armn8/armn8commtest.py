@@ -105,12 +105,14 @@ try:
     # DevAddr 4 octets : 69=790200A0 => A0000279 (last 4 bytes of the MAC address) DEVaddr used if ABP : short identifier
     sendAtCommand(wSerial,'ATO069\n\r',"=")
     # DevEUI  8 octets : 70=790200A09BD5B370 => 70B3D59BA0000279  DEVei
-    sendAtCommand(wSerial,'ATO070\n\r',"=")
+    wDeveui = sendAtCommand(wSerial,'ATO070\n\r',"=")
+    print "deveui="+wDeveui
     # AppEUI  8 octets : 71=040000A09BD5B370 =>  70B3D59BA0000004  APPeui  Application unique ID
-    sendAtCommand(wSerial,'ATO071\n\r',"=")
-    
+    wAppEui = sendAtCommand(wSerial,'ATO071\n\r',"=")
+    print "appEui="+wAppEui
     # AppKey  16 octets : 72=DEABB8B3F73DB1B61E2A2DE8267E9A10 : AppKey : used to crypt the first exchange if OTAA
-    sendAtCommand(wSerial,'ATO072\n\r',"=")
+    wAppKey = sendAtCommand(wSerial,'ATO072\n\r',"=")
+    print "appKey="+wAppKey
     # NWKSkey 16 octets : 73=415B9A09E42F7B74B378D855A64996EE : NWKSkey
     sendAtCommand(wSerial,'ATO073\n\r',"=")
     # AppSKey 16 octets : 74=F354A7B86C5BD0F5E11E40E5DC0FDB82 : AppSKey : used to crypt the payload of the packets
