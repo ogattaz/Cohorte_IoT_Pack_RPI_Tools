@@ -32,7 +32,8 @@ def waitToken(aSerial,aToken):
         time.sleep(0.1)
         wIdx += 1
         wBytes += readlineCR(aSerial)
-    
+    #print "****read "+wBytes
+        
     if (wIdx<KNBTRY):
         print 'Token [%s] found' % (aToken)
     else:
@@ -40,6 +41,14 @@ def waitToken(aSerial,aToken):
     
     print 'Reply=[%s]' % (replace_all(wBytes,KEPLACE))
     return wBytes
+
+def sendATDollarSF(aSerial,aCommand):
+    print '--- sendATDollarSF'
+    wBytes=aCommand.encode('utf-8')
+    print 'send=[%s]' % (replace_all(wBytes,KEPLACE))
+    wSerial.write(wBytes)
+    return wBytes;
+
 
 
 def sendAtCommand(aSerial,aCommand,aToken):
@@ -117,6 +126,9 @@ try:
     sendAtCommand(wSerial,'ATO073\n\r',"=")
     # AppSKey 16 octets : 74=F354A7B86C5BD0F5E11E40E5DC0FDB82 : AppSKey : used to crypt the payload of the packets
     sendAtCommand(wSerial,'ATO074\n\r',"=")
+
+    sendAtCommand(wSerial,'ATO083\n\r',"=")
+    sendAtCommand(wSerial,'ATO201\n\r',"=")
     
     
     # debug on : 03 debug off : 01
@@ -173,16 +185,19 @@ try:
 
 
 
-    sendPacquet(wSerial,wBytesBuff)
-    sendPacquet(wSerial,wBytesBuff)
-    sendPacquet(wSerial,wBytesBuff)
+    sendATDollarSF(wSerial,"AT$SF={}".format(binascii.hexlify(wBytesBuff)))
+    sendATDollarSF(wSerial,"AT$SF={}".format(binascii.hexlify(wBytesBuff)))
+    sendATDollarSF(wSerial,"AT$SF={}".format(binascii.hexlify(wBytesBuff)))
     
     
     count = 0
-    while count< 40 :
+    while count< 400 :
         line = wSerial.readline()
         print(str(count) + str(': ') + line )
         count = count+1
+        if count % 20 == 0:
+            sendATDollarSF(wSerial,"AT$SF={}".format(binascii.hexlify(wBytesBuff)))
+            sendPacquet(wSerial,bytearray("AT0222\n\r","utf-8"))
 
 
 except Exception as inst:
