@@ -112,79 +112,14 @@ try:
     
     # get class of the lora use
     sendAtCommand(wSerial,'ATM000\n\r',"=")
-
     # set ATM00' to add character that encapsulate trace 
-    sendAtCommand(wSerial,'ATM004=23\n\r',"=")
-    # Read the IDs and the Keys
-    # DevAddr 4 octets : 69=790200A0 => A0000279 (last 4 bytes of the MAC address) DEVaddr used if ABP : short identifier
-    sendAtCommand(wSerial,'ATO069\n\r',"=")
-    # DevEUI  8 octets : 70=790200A09BD5B370 => 70B3D59BA0000279  DEVei
-    wDeveui = sendAtCommand(wSerial,'ATO070\n\r',"=")
-    print "deveui="+wDeveui
-    # AppEUI  8 octets : 71=040000A09BD5B370 =>  70B3D59BA0000004  APPeui  Application unique ID
-    wAppEui = sendAtCommand(wSerial,'ATO071\n\r',"=")
-    print "appEui="+wAppEui
-    # AppKey  16 octets : 72=DEABB8B3F73DB1B61E2A2DE8267E9A10 : AppKey : used to crypt the first exchange if OTAA
-    wAppKey = sendAtCommand(wSerial,'ATO072\n\r',"=")
-    print "appKey="+wAppKey
-    # NWKSkey 16 octets : 73=415B9A09E42F7B74B378D855A64996EE : NWKSkey
-    sendAtCommand(wSerial,'ATO073\n\r',"=")
-    # AppSKey 16 octets : 74=F354A7B86C5BD0F5E11E40E5DC0FDB82 : AppSKey : used to crypt the payload of the packets
-    sendAtCommand(wSerial,'ATO074\n\r',"=")
-
-    sendAtCommand(wSerial,'ATO083\n\r',"=")
-    sendAtCommand(wSerial,'ATO201\n\r',"=")
+    sendAtCommand(wSerial,'ATM000=09\n\r',"=")
+    sendAtCommand(wSerial,'ATMS\n\r',"=")
+    sendAtCommand(wSerial,'ATR\n\r',"=")
+   
     
-    
-    # debug on : 03 debug off : 01
-    sendAtCommand(wSerial,'ATM017=01\n\r',"EEP")
-    
-    sendAtCommand(wSerial,'ATQ\n\r',"Quit setup mode")
     #wSerial.write('{"f":1,"v":"b8e856307918","t":1474489126,"m":{"e":1474474726,"s":1474474906}}'.encode('utf-8'))
-    
-    # test send UUID
-    #sendPacquet(wSerial,"\nD9c9a8ac9-3bbc-4a47-90fe-b0146cfce663\r".encode("utf-8"))
-    #sendPacquet(wSerial,"\nS182ba0108-55cb-429a-9d45-875b69450a88\r".encode("utf-8"))
-    
-    
-    #@see http://stackoverflow.com/questions/29177788/python-string-to-bytearray-and-back
-
-    wBytesMAC = bytearray(b'\xb8\xe8\x56\x30\x79\x18')
-    print 'BytesMAC=[%s]' % binascii.hexlify(wBytesMAC)
-    
-    wBytesTSEntry = base256_encode(1474556189,4)
-    print 'TSEntry=[%s]' % binascii.hexlify(wBytesTSEntry)
-    
-    wBytesDeltaOut = base256_encode(8,2)
-    print 'wBytesDeltaOut=[%s]' % binascii.hexlify(wBytesDeltaOut)
-    
-    wPower = base256_encode(64,1)
-    print 'wPower=[%s]' % binascii.hexlify(wPower)
-    
-    wBytesDeltaSend = base256_encode(32,2)
-    print 'BytesDeltaSend=[%s]' % binascii.hexlify(wBytesDeltaSend)
-
-    wBytesBuff = bytearray()
-    wBytesBuff.append(b'\x0a')  # begin \n         (1 Byte)
-    wBytesBuff.append(b'\x4d')  # M as measure     (1 Byte)
-    wBytesBuff.append(b'\x01')  # 1 as sensor One  (1 Byte)
-
-    for x in wBytesMAC:
-        wBytesBuff.append(x)    # MAC address      (6 Bytes)
-
-    for x in wBytesTSEntry:     # timestamp entry  (4 Bytes)
-        wBytesBuff.append(x)
-
-    for x in wBytesDeltaOut:    # delta out   (2 Bytes)
-        wBytesBuff.append(x)
-    
-    for x in wPower:
-        wBytesBuff.append(x)    # timestamp entry  (1 Byte)
-
-    for x in wBytesDeltaSend:   # delta send   (2 Bytes)
-        wBytesBuff.append(x)
-    
-    wBytesBuff.append(b'\x0d')  # end \n           (1 Byte)
+   
 
 
 
@@ -192,16 +127,7 @@ try:
     #sendATDollarSF(wSerial,"AT$SF={}".format(binascii.hexlify(wBytesBuff)))
     #sendATDollarSF(wSerial,"AT$SF={}".format(binascii.hexlify(wBytesBuff)))
     
-    
-    count = 0
-    while count< 400 :
-        line = wSerial.readline()
-        print(str(count) + str(': ') + line )
-        count = count+1
-        #if count % 20 == 0:
-        #    sendATDollarSF(wSerial,"AT$SF={}".format(binascii.hexlify(wBytesBuff)))
-
-
+   
 except Exception as inst:
     # this catches ALL other exceptions including errors.
     # You won't get any error messages for debugging
